@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defqon.1 Weekend Warrior - Huskeliste</title>
+    <style>
+        body {
+            background-color: #000;
+            /* Defqon-baggrundsbillede genereret af AI */
+            background-image: url('image_0.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #ff6600; /* Defqon Orange */
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-bottom: 2px solid #ff6600;
+            padding-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        .subtitle {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            color: #ccc;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .category-section {
+            /* Frostet glas-effekt for læsbarhed over baggrunden */
+            background: rgba(26, 26, 26, 0.85);
+            backdrop-filter: blur(5px);
+            margin-bottom: 20px;
+            padding: 15px;
+            border-left: 5px solid #ff6600;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: #ff6600;
+            text-transform: uppercase;
+        }
+
+        .input-group {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 3px 0 0 3px;
+            background: rgba(51, 51, 51, 0.8);
+            color: white;
+        }
+
+        button.add-btn {
+            padding: 10px 15px;
+            border: none;
+            background: #ff6600;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 0 3px 3px 0;
+            text-transform: uppercase;
+            transition: background 0.2s;
+        }
+
+        button.add-btn:hover {
+            background: #e65c00;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background: rgba(38, 38, 38, 0.7);
+            margin: 5px 0;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        li.checked {
+            text-decoration: line-through;
+            opacity: 0.5;
+            border-left: 3px solid #00ff00;
+        }
+
+        .item-text {
+            cursor: pointer;
+            flex-grow: 1;
+        }
+
+        .delete-btn {
+            background: transparent;
+            color: #ff3333;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 10px;
+            line-height: 1;
+        }
+
+        footer {
+            margin-top: auto;
+            padding-top: 30px;
+            font-size: 0.8rem;
+            color: #aaa;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Victory Forever</h1>
+    <p class="subtitle">DIN DEFQON.1 HUSKELISTE</p>
+
+    <div class="container" id="app">
+        </div>
+
+    <footer>
+        Orange Heart - Weekend Warrior List
+    </footer>
+
+    <script>
+        // Definer dine kategorier her
+        const categories = ["Camp & Sovegrej", "Outfit & Gear", "Elektronik", "Hygiejne & Mad"];
+        const app = document.getElementById('app');
+
+        // Initialiser kategorier og deres input-felter
+        categories.forEach(cat => {
+            const section = document.createElement('div');
+            section.className = 'category-section';
+            
+            section.innerHTML = `
+                <h2>${cat}</h2>
+                <div class="input-group">
+                    <input type="text" placeholder="Tilføj ting til ${cat}..." id="input-${cat}">
+                    <button class="add-btn" onclick="addItem('${cat}')">TILFØJ</button>
+                </div>
+                <ul id="list-${cat}"></ul>
+            `;
+            app.appendChild(section);
+        });
+
+        // Funktion til at tilføje et punkt til en liste
+        function addItem(cat) {
+            const input = document.getElementById(`input-${cat}`);
+            const list = document.getElementById(`list-${cat}`);
+            const text = input.value.trim();
+
+            if (text === "") return; // Gør intet hvis input er tomt
+
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="item-text" onclick="this.parentElement.classList.toggle('checked')">${text}</span>
+                <button class="delete-btn" onclick="this.parentElement.remove()" title="Slet">×</button>
+            `;
+
+            list.appendChild(li);
+            input.value = ""; // Tøm input-feltet
+            input.focus();    // Sæt fokus tilbage på feltet
+        }
+
+        // Gør det muligt at trykke "Enter" for at tilføje, når man står i et input-felt
+        window.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                const activeId = document.activeElement.id;
+                if(activeId && activeId.startsWith('input-')) {
+                    const cat = activeId.replace('input-', '');
+                    addItem(cat);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
